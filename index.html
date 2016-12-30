@@ -70,6 +70,7 @@
 				$(".loading_inner").css({
 					bottom:(start+"%")
 				})
+				console.log(Math.floor(start/end)*100+"%");
 				start/end==1&&(function(){
 				   clearInterval(time);
 				   if(count==len){
