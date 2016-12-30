@@ -56,10 +56,11 @@
 	  	}
 	  	loading_time=setInterval(function(){
 	  		end=count/len*120;
+	  		console.log(end);
 	  		waveAnimate(start,end);
 	  		start=end;
 	  		end==120&&clearInterval(loading_time);
-	  	},100)
+	  	},500)
 	  	function waveAnimate(start,end){
 			var t=0,maxT=300;
 			time=setInterval(function(){
