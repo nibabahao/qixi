@@ -33,7 +33,7 @@
 	<script type="text/javascript" src="js/jquery.1.7.1.min.js"></script>
 	<script type="text/javascript">
 	  $(function(){
-	  	var count=0,start=0,end=0,loading_time,
+	  	var count=0,start=0,end=0,loading_time,time,
 	  		imageSource=["images/p_img1.jpg",
 	  					 "images/p_img2.jpg",
 	  					 "images/p_img3.jpg",
@@ -67,6 +67,7 @@
 	  	// },500)
 	  	function waveAnimate(start,end){
 			var t=0,maxT=300;
+			clearInterval(time);
 			time=setInterval(function(){
 				t++;
 				$(".loading_inner").css({
