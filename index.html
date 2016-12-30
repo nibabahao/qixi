@@ -33,7 +33,7 @@
 	<script type="text/javascript" src="js/jquery.1.7.1.min.js"></script>
 	<script type="text/javascript">
 	  $(function(){
-	  	var count=0,start=0,end=0,time,time_flag=1,
+	  	var count=0,start=0,end=120,time,time_flag=1,
 	  		imageSource=["images/p_img1.jpg",
 	  					 "images/p_img2.jpg",
 	  					 "images/p_img3.jpg",
@@ -52,7 +52,7 @@
 	  			image.src=imageSource[i];
 	  			image.onload=function(){
 	  				count++;
-	  				end=count/len*120;
+	  				// end=count/len*120;
 	  				// if(time_flag){
 	  				//   time_flag=0;
 	  				//   waveAnimate(start,end);
@@ -64,7 +64,7 @@
 			// var t=0,maxT=300;
 			clearInterval(time);
 			time=setInterval(function(){
-				if(start<count){
+				if(start/end<count/len){
 					start++;
 				}
 				$(".loading_inner").css({
