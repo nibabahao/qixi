@@ -70,7 +70,7 @@
 				$(".loading_inner").css({
 					bottom:(start+"%")
 				})
-				count==len&&(function(){
+				start/end==100&&(function(){
 				   clearInterval(time);
 				   if(count==len){
 				   	$(".loadingPage").addClass("loadingLogo_active");
