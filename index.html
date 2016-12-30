@@ -2,19 +2,83 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<title>Document</title>
-	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/demo.css">
 	<style type="text/css">
-		body{
-			overflow: hidden;
+		*{
+			margin:0;
+			padding:0;
+		}
+		html,body{
+			height: 100%;
 		}
 	</style>
 </head>
 <body>
-	<canvas id="can" ></canvas>
-	<script type="text/javascript" src="js/easeljs-0.8.2.min.js"></script>
-	<script src="js/tweenjs-0.6.2.min.js"></script>
-	<script type="text/javascript" src="js/main.js"></script>
+	<div class="loadingPage">
+		<div class='loadingLogo'>
+			<div class="loading_tip">
+				<div class="load_bg">
+					<div class="loading_inner"></div>
+				</div>
+			</div>
+			<img src="images/logo_w.png">
+		</div>	
+		<div class="loadingTitle">
+			<h1>您的世界即将缤纷了</h1>
+			<p>Living Your Imagination</p>
+		</div>		
+	</div>
+	<script type="text/javascript" src="js/jquery.1.7.1.min.js"></script>
+	<script type="text/javascript">
+	  $(function(){
+	  	var count=0,start=0,end=0,loading_time,
+	  		imageSource=["images/p_img1.jpg",
+	  					 "images/p_img2.jpg",
+	  					 "images/p_img3.jpg",
+	  					 "images/p_img4.jpg",
+	  					 "images/p_img5.jpg",
+	  					 "images/p_tit1.png",
+	  					 "images/p_tit2.png",
+	  					 "images/p_tit3.png",
+	  					 "images/p_tit4.png",
+	  					 "images/p_tit5.png",
+	  					 "images/pabout_logo.png",
+	  					 "images/pmap.jpg"],
+	  		len=imageSource.length;			 
+	  	for(var i=0;i<len;i++){
+	  		var image=new Image();
+	  			image.src=imageSource[i];
+	  			image.onload=function(){
+	  				count++;
+	  			}
+	  	}
+	  	loading_time=setInterval(function(){
+	  		end=count/len*120;
+	  		waveAnimate(start,end);
+	  		start=end;
+	  		end==120&&clearInterval(loading_time);
+	  	},100)
+	  	function waveAnimate(start,end){
+			var t=0,maxT=300;
+			time=setInterval(function(){
+				t++;
+				$(".loading_inner").css({
+					bottom:((end-start)/maxT*t+start+"%")
+				})
+				t==maxT&&(function(){
+				   clearInterval(time);
+				   if(count==len){
+				   	$(".loadingPage").addClass("loadingLogo_active");
+				   	setTimeout(function(){
+				   		console.log("预加载完成");
+				   	},1500)
+				   }
+				})();			
+			},16.6);  		
+	  	}
+	  })
+	</script>
 </body>
 </html>
