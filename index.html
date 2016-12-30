@@ -33,7 +33,7 @@
 	<script type="text/javascript" src="js/jquery.1.7.1.min.js"></script>
 	<script type="text/javascript">
 	  $(function(){
-	  	var count=0,start=0,end=0,loading_time,time,
+	  	var count=0,start=0,end=0,loading_time,time,time_flag=0,
 	  		imageSource=["images/p_img1.jpg",
 	  					 "images/p_img2.jpg",
 	  					 "images/p_img3.jpg",
@@ -53,18 +53,12 @@
 	  			image.onload=function(){
 	  				count++;
 	  				end=count/len*120;
-	  				waveAnimate(start,end);
-			  		start=end;
+	  				if(time_flag){
+	  				  waveAnimate(start,end);
+	  				}
 			  		end==120&&clearInterval(loading_time);
 	  			}
 	  	}
-	  	// loading_time=setInterval(function(){
-	  	// 	end=count/len*120;
-	  	// 	console.log(end);
-	  	// 	waveAnimate(start,end);
-	  	// 	start=end;
-	  	// 	end==120&&clearInterval(loading_time);
-	  	// },500)
 	  	function waveAnimate(start,end){
 			var t=0,maxT=300;
 			clearInterval(time);
@@ -79,8 +73,10 @@
 				   	$(".loadingPage").addClass("loadingLogo_active");
 				   	setTimeout(function(){
 				   		console.log("预加载完成");
-				   	},1500)
+				   	},1500);
 				   }
+				   start=end;
+				   time_flag=1;
 				})();			
 			},16.6);  		
 	  	}
