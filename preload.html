@@ -42,7 +42,18 @@
 				sy=(can.height-img.height)/2;
 				ctx.drawImage(img,x,y,img.width,img.height);
 				var imageData=ctx.getImageData(x,y,img.width,img.height);
-					source=["images/bg1.jpg","images/bg2.jpg","images/bg3.jpg","images/bg4.jpg","images/bg5.jpg","images/bg6.jpg","images/bg7.jpg","images/bg8.jpg","images/bg2.jpg","images/mubu.png","images/word1.png","images/word1.png","images/word2.png","images/word3.png","images/word4.png","images/word5.png","images/word6.png","images/word7.png","images/word8.png"],lastNum=0,loadnum=0,e_p=0;
+					source=["images/p_img1.jpg",
+	  					 "images/p_img2.jpg",
+	  					 "images/p_img3.jpg",
+	  					 "images/p_img4.jpg",
+	  					 "images/p_img5.jpg",
+	  					 "images/p_tit1.png",
+	  					 "images/p_tit2.png",
+	  					 "images/p_tit3.png",
+	  					 "images/p_tit4.png",
+	  					 "images/p_tit5.png",
+	  					 "images/pabout_logo.png",
+	  					 "images/pmap.jpg"],lastNum=0,loadnum=0,e_p=0;
 					calculate();
 					for(var i=0,len=source.length;i<len;i++){
 						var image=new Image();
