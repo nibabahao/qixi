@@ -425,7 +425,9 @@ function scene2(){
         	createjs.Tween.get(flake, {loop:true,override:true})
         	.to({x:endPositionLeft+ratio},5000,createjs.Ease.linear)
         	.to({x:endPositionLeft},5000,createjs.Ease.linear)
-        })
+        });
+        var finish=document.getElementById("finish");
+        finish.style.opacity=1;
 	}
 	
 
@@ -448,3 +450,4 @@ function drawImage(obj,x,y,container){
 	return img;
 }
 
+//写字体

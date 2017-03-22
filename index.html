@@ -9,10 +9,29 @@
 		body{
 			overflow: hidden;
 		}
+		#finish{
+			position: absolute;
+			z-index: 4;
+			font-size: 30px;
+			color:rgb(153,102,204);
+			font-weight: bold;
+			top:20%;
+			left:50%;
+			transform: translate3d(-50%,0,0);
+			-webkit-transform: translate3d(-50%,0,0);
+			-moz-transform: translate3d(-50%,0,0);
+			-ms-transform: translate3d(-50%,0,0);
+			opacity: 0;
+			transition: opacity 30s;
+			-webkit-transition: opacity 30s;
+			-moz-transition: opacity 30s;
+			-ms-transition: opacity 30s;
+		}
 	</style>
 </head>
 <body>
-	<canvas id="can" ></canvas>
+	<canvas id="can"></canvas>
+	<img src="Image/end.png" id="finish">
 	<script type="text/javascript" src="js/easeljs-0.8.2.min.js"></script>
 	<script type="text/javascript" src="js/tweenjs.min.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
