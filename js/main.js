@@ -2,9 +2,9 @@ var can=document.getElementById("can"),
 	ctx=can.getContext("2d"),
 	stage=new createjs.Stage(can),
 	//loading页元素
-	loadSrc=["./Image/boy.png","./Image/QixiA.jpg","./Image/QixiB-dark.png","./Image/QixiC.png","./Image/sun.png","./Image/cloud1.png",
+	loadSrc=["./Image/QixiA.jpg","./Image/QixiB-dark.png","./Image/QixiC.png","./Image/sun.png","./Image/cloud1.png",
 	"./Image/cloud2.png","./Image/door-left.png","./Image/door-right.png","./Image/girl.png",
-	"./Image/water1.png","./Image/water2.png","./Image/water3.png","./Image/water4.png","./Image/stars.png"
+	"./Image/water1.png","./Image/water2.png","./Image/water3.png","./Image/water4.png","./Image/stars.png","./Image/boy.png"
 	],
 	imgList=[],
 	rateX=document.documentElement.clientWidth/720,
