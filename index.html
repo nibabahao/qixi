@@ -3,18 +3,734 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<title>Document</title>
-	<link rel="stylesheet" type="text/css" href="css/reset.css">
-	<style type="text/css">
-		body{
-			overflow: hidden;
+	<title>仿造物节</title>
+    <script src="./js/zepto.min.js"></script>
+    <script src="./js/bone.min.js"></script>
+    <script src="./js/css3d.min.js"></script>
+    <script src="./js/orienter.min.js"></script>
+    <script src="./js/jstween.min.js"></script>
+    <style type="text/css">
+		html,body{
+			width: 100%;
+			height: 100%;
+			padding:0;
+			margin:0;
 		}
-	</style>
+		#main{
+            display: none;
+			height: 100%;
+		}
+        .mask{
+            position: fixed;
+            display: none;
+            z-index: 5000;
+            width:100%;
+            height: 100%;
+            top:0;
+            left:0;
+        }
+        .load{
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-	<canvas id="can" ></canvas>
-	<script type="text/javascript" src="js/easeljs-0.8.2.min.js"></script>
-	<script src="js/tweenjs-0.6.2.min.js"></script>
-	<script type="text/javascript" src="js/main.js"></script>
+    <div class="load"></div>
+	<div id="main"></div>
+    <div class="mask"></div>
+	<script src="./js/gesture.js"></script>
+	<script type="text/javascript">
+    loadInit();
+    function taopanoInit(){
+    	//搭建舞台
+    	var stage=new C3D.Stage(),
+    		bg=$("#main").show(),
+    		enterAnimate,
+            vw=window.innerWidth, 
+            vh=window.innerHeight,
+    		requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame ||
+            function (callback) {
+                setTimeout(callback, 1000 / 60);
+            };			
+    	 	stage.size(vw, vh).material({
+    	 	// image:"./images/bg2.jpg",bothsides:false
+    	 	color:"#FFF"
+    	 }).update();
+    	 bg.append(stage.el);
+        //创建第一层背景
+        var panoRect = {w: 2580, h: 1170};
+        var bgData = [
+            {url: 'images/p1.png'},
+            {url: 'images/p2.png'},
+            {url: 'images/p3.png'},
+            {url: 'images/p4.png'},
+            {url: 'images/p5.png'},
+            {url: 'images/p6.png'},
+            {url: 'images/p7.png'},
+            {url: 'images/p8.png'},
+            {url: 'images/p9.png'},
+            {url: 'images/p10.png'},
+            {url: 'images/p11.png'},
+            {url: 'images/p12.png'},
+            {url: 'images/p13.png'},
+            {url: 'images/p14.png'},
+            {url: 'images/p15.png'},
+            {url: 'images/p16.png'},
+            {url: 'images/p17.png'},
+            {url: 'images/p18.png'},
+            {url: 'images/p19.png'},
+            {url: 'images/p20.png'},
+        ];
+        var panoBg=createBackground(bgData,panoRect);
+        panoBg.position(0, 0, -2000).updateT();
+        stage.addChild(panoBg);
+        //第二内层
+        //块级创建
+        var actorData = [
+            {
+                name: 'a1', lon: 170, lat: 85,prv:-350,rx:0,ry:-22,rz:0,
+                actor: {w: 145, h: 126, x: 0, y: 0, url: 'an1.png',rz:0},
+                info: {w: 264, h: 47, x: -80, y: -90, z:40, url: 't1.png',ox:0,oy:"50%",oz:0},
+                tips:{w:97,h:96,x:-80,y:-88,z:50,url:'trangle.png'},
+                rotation:0,x:0,y:20,z:0,r0:42.5
+            },
+            {
+                name: 'a2', lon: 0, lat: 350,prv:-350,rx:0,ry:18,rz:0,
+                actor: {w: 140, h: 100, x: 0, y: 0, url: 'an2.png',rz:0},
+                info: {w: 264, h: 47, x: -140, y: -68, z:0, url: 't2.png',ox:0,oy:"50%",oz:0},
+                tips:{w:97,h:96,x:-140,y:-65,z:0,url:'trangle.png'},
+                rotation:-15,x:0,y:0,z:0,r0:0
+            },
+            {
+                name: 'a3', lon: 300, lat: 200,prv: 200,rx:0,ry:-90,rz:0,
+                actor: {w: 158, h: 160, x: 0, y: 0, url: 'an3.png',rz:0},
+                info: {w: 265, h: 47, x: 0, y: 2, z:30, url: 't3.png',ox:"100%",oy:"50%",oz:0},
+                tips:{w:97,h:96,x:0,y:0,z:40,url:'trangle2.png'},
+                rotation:0,x:-10,y:15,z:0,r0:125
+            },
+            {
+                name: 'a4', lon: 250, lat: -250,prv: 80,rx:0,ry:-90,rz:0,
+                actor: {w: 110, h: 130, x: 0, y: -100, url: 'an4.png',rz:-45},
+                info: {w: 265, h: 47, x: 0, y: 0, z:30, url: 't4.png',ox:"100%",oy:"50%",oz:0},
+                tips:{w:97,h:96,x:0,y:10,z:40,url:'trangle2.png'},
+                rotation:0,x:-25,y:25,z:10,r0:110
+            },
+            {
+                name: 'a5', lon: -90, lat: 400,prv: 360,rx:0,ry:-200,rz:0,
+                actor: {w: 144, h: 120, x: 0, y: 0, url: 'an5.png',rz:0},
+                info: {w: 265, h: 47, x: 0, y: -92, z:20, url: 't5.png',ox:0,oy:"50%",oz:0},
+                tips:{w:97,h:96,x:0,y:-90,z:30,url:'trangle3.png'},
+                rotation:0,x:100,y:0,z:0,r0:220
+            },
+            {
+                name: 'a6', lon: -130, lat: -50,prv: 370,rx:0,ry:-200,rz:0,
+                actor: {w: 133, h: 114, x: 0, y: 0, url: 'an6.png',rz:0},
+                info: {w: 265, h: 47, x: 0, y: -10, z:120, url: 't6.png',ox:"100%",oy:"50%",oz:0},
+                tips:{w:97,h:96,x:0,y:-12,z:130,url:'trangle3.png'},
+                rotation:-30,x:0,y:-100,z:0,r0:200
+            },
+            {
+                name: 'a7', lon: -280, lat: 285,prv: -180,rx:0,ry:90,rz:0,
+                actor: {w: 178, h: 99, x: 0, y: 0, url: 'an7.png',rz:0},
+                info: {w: 256, h: 47, x: -120, y: -98, z:30, url: 't7.png',ox:0,oy:"50%",oz:0},
+                tips:{w:97,h:96,x:-120,y:-100,z:40,url:'trangle4.png'},
+                rotation:0,x:-25,y:-5,z:0,r0:300
+            },
+            {
+                name: 'a8', lon: -230, lat: -350,prv: -160,rx:0,ry:45,rz:0,
+                actor: {w: 117, h: 110, x: 0, y: 0, url: 'an8.png',rz:0},
+                info: {w: 256, h: 47, x: 0, y:140, z:30, url: 't8.png',ox:0,oy:"50%",oz:0},
+                tips:{w:97,h:96,x:0,y:140,z:40,url:'trangle4.png'},
+                rotation:20,x:-75,y:50,z:0,r0:320
+            }                                                                                     
+        ],
+        actors=new C3D.Sprite();
+        actors.name("actor").position(0,0,-2000).update();
+        createContent();
+
+        function createBackground(imgs,rect){
+            var _len = imgs.length,
+                _step = rect.w / _len,
+                _radius = Math.floor(_step / 2 / Math.tan(Math.PI / _len)) - 1,
+                _sp = new C3D.Sprite();
+            for (var i = 0; i < _len; i++) {
+                var _p = new C3D.Plane(),
+                    _r = 360 / _len * i,
+                    _a = Math.PI * 2 / _len * i;
+                _p.size(_step, rect.h).position(Math.sin(_a) * _radius, 0, -Math.cos(_a) * _radius).rotation(0, -_r, 0).material({
+                    image: imgs[i].url,
+                    repeat: 'no-repeat',
+                    bothsides: false,
+                }).update();
+                _sp.addChild(_p);
+            }
+
+            return _sp;
+        }
+        function createContent(){
+            $.each(actorData,function(i,obj){
+                var _data = obj,
+                	_lon = _data.lon,
+                	_lat = _data.lat,
+                	_item = C3D.create({
+                    type: 'sprite',
+                    name: _data.name,
+                    position: [_data.lon, _data.lat, _data.prv],
+                    rotation: [_data.rx, _data.ry, _data.rz],
+                    scale: [1],
+                    children: [
+        	                    {
+        	                        type: 'plane',
+        	                        name: 'actor',
+        	                        position: [_data.actor.x, _data.actor.y, 0],
+        	                        rotation:[0,0,_data.actor.rz],
+        	                        size: [_data.actor.w, _data.actor.h],
+        	                        material: [{image: './images/' + _data.actor.url, bothsides: false}],
+        	                    },
+        	                    {
+        	                        type: 'plane',
+        	                        name: 'info',
+        	                        position: [_data.info.x, _data.info.y, _data.info.z],
+        	                        scale: [0, 1, 1],
+        	                        size: [_data.info.w, _data.info.h],
+        	                        visibility: [{alpha: 0}],
+        	                        material: [{image: './images/' + _data.info.url, bothsides: false}],
+        	                    },
+        	                    {
+        	                        type: 'plane',
+        	                        name: 'tips',
+        	                        position: [_data.tips.x, _data.tips.y, _data.tips.z],
+        	                        scale: [1, 1, 1],
+        	                        size: [_data.tips.w, _data.tips.h],
+        	                        visibility: [{alpha: 1}],
+        	                        material: [{image: './images/' + _data.tips.url, bothsides: false}],
+        	                    }                    
+                   			]	
+                	});   
+                //提示漂浮和动物动画
+                var an=_item.children[0],
+                	info=_item.children[1].el,
+                	tips=_item.children[2],
+                	r0=_item.x;
+                	_item.r0 = _data.r0;
+                    _item.data = _data;
+                    //设置信息旋转中心
+                    _item.children[1].origin(_data.info.ox,_data.info.oy,_data.info.oz);    
+                    _item.children[1].update();
+                    JT.to(an, 3, {
+                    	x: '+='+_data.x,
+                        y: '+='+_data.y,
+                        z: '+='+_data.z,
+                        rotationZ:"+="+_data.rotation,
+                        ease: JT.Quad.InOut,
+                        repeat: -1,
+                        yoyo: true,
+                        delay: Math.random() * 3,
+                        onUpdate: function () {
+                            this.target.updateT();
+                        }
+                    });	            
+                    JT.to(tips, 0.5, {
+                        scaleX:"+=0.2",
+                        scaleY:"+=0.2",
+                        ease: JT.Quad.InOut,
+                        repeat: -1,
+                        yoyo: true,
+                        onUpdate: function () {
+                            this.target.updateT();
+                        }
+                    });
+                    //按钮绑定
+                    actors.addChild(_item);
+                    info.className="clickBtn";
+            });
+            stage.addChild(actors);
+            //加入第二层
+            enterAnimate=requestAnimationFrame(enterSence);
+            //场景进入动画
+            function enterSence(){
+                var _len=bgData.length;
+            		enterAnimate=requestAnimationFrame(enterSence);
+            		panoBg.rotate(0,4,0).update();
+            		panoBg.move(0,0,20.5);
+            		actors.rotate(0,4,0).update();
+            		actors.move(0,0,20.5);
+                    // $.each(panoBg.children,function(i,item){
+                    //     item.width--;
+                    // var _r = 360 / _len * i,
+                    //     _step=item.width,
+                    //     _a = Math.PI * 2 / _len * i,
+                    //     _radius = Math.floor(_step / 2 / Math.tan(Math.PI / _len)) - 1;
+                    //     item.position(Math.sin(_a) * _radius, 0, -Math.cos(_a) * _radius).rotation(0, -_r, 0).update();
+                    // })
+
+            		if(panoBg.rotationY>=360){
+            			panoBg.rotationY=360;
+            			actors.rotationY=360;
+            			cancelAnimationFrame(enterAnimate);
+            			touchInit();
+                        clickBtn();
+            		}
+            }
+            function touchInit(){
+            	var _self={
+        	    drag: {lon: 0, lat: 0},
+        	    aim: {lat: 0, lon: 0},
+        	    fix: {lon: 0, lat: 0},
+        		},
+                stime,
+        		o=new Orienter(),
+        		animateId;
+        		gesture.init($(bg));
+            	gesture.on('move', function (obj) {
+                    _self.drag.lon = (_self.drag.lon - obj.ax * 0.2) % 360;
+                    _self.drag.lat = Math.max(-90, Math.min(90, _self.drag.lat + obj.ay * 0.2));
+                    cancelAnimationFrame(stime);
+                    stime=requestAnimationFrame(scaleSence);
+                });
+                gesture.on('end',function(obj){
+                    cancelAnimationFrame(stime);
+                    stime=requestAnimationFrame(sushao);
+                })
+                //重力感应改变
+                o.onOrient=function(obj){
+                	_self.aim.lon=-obj.lon;
+                	_self.aim.lat=obj.lat;
+                }
+                o.init();
+                //监控lon lat变化改变角度
+                animateId=requestAnimationFrame(animate);
+                function animate(){
+                	animateId = requestAnimationFrame(animate);
+        	        var _lon = (_self.aim.lon + _self.fix.lon + _self.drag.lon) % 360;
+        	        var _lat = (_self.aim.lat + _self.fix.lat + _self.drag.lat) * 0.35;
+
+        	        if (_lon - panoBg.rotationY > 180) panoBg.rotationY += 360;
+        	        if (_lon - panoBg.rotationY < -180) panoBg.rotationY -= 360;
+        	       	if (_lon - actors.rotationY > 180) actors.rotationY += 360;
+        	        if (_lon - actors.rotationY < -180) actors.rotationY -= 360;
+        	        panoBg.rotationY += (_lon - panoBg.rotationY) * 0.3;
+        	        panoBg.rotationX += (_lat - panoBg.rotationX) * 0.15;
+        	       	actors.rotationY += (_lon - actors.rotationY) * 0.18;
+        	        actors.rotationX += (_lat - actors.rotationX) * 0.9;
+        	        panoBg.updateT();
+        	        actors.updateT();
+        	        checkDots(actors.rotationY);
+                }
+                //提示显示
+        	    function checkDots(ry) {
+        	        var _ry = ry % 360;
+        	        _ry = _ry < 0 ? _ry + 360 : _ry;
+        	        for (var i = 0, l = actors.children.length; i < l; i++) {
+        	            var _actor = actors.children[i];
+        	            if (_actor.r0 > _ry - 30 && _actor.r0 < _ry + 30) {
+        	                if (_actor.info.alpha == 0) {
+        	                    JT.kill(_actor.info);
+        	                    JT.to(_actor.info, 0.3, {
+        	                        scaleX: 1, scaleY: 1, alpha:1, ease: JT.Quad.Out, onUpdate: function () {
+        	                            this.target.updateT().updateV();
+        	                        }
+        	                    });
+        	                }
+        	            } else {
+        	                if (_actor.info.alpha == 1) {
+        	                    JT.kill(_actor.info);
+        	                    JT.to(_actor.info, 0.3, {
+        	                        scaleX: 0, scaleY: 1, alpha:0, ease: JT.Quad.Out, onUpdate: function () {
+        	                            this.target.updateT().updateV();
+        	                        }
+        	                    });
+        	                }
+        	            }
+        	        }
+        	    }   
+                //放大动画
+                function scaleSence(){
+                   panoBg.move(0,0,-5);
+                   actors.move(0,0,-5);
+                   stime=requestAnimationFrame(scaleSence);
+                   if(panoBg.z<=-205){
+                    panoBg.z=-205;
+                    actors.z=-205;
+                    cancelAnimationFrame(stime);
+                   }  
+                }
+                //缩回动画
+                function sushao(){
+                   panoBg.move(0,0,5);
+                   actors.move(0,0,5);
+                   stime=requestAnimationFrame(sushao);
+                   if(panoBg.z>=-155){
+                    panoBg.z=-155;
+                    actors.z=-155;
+                    cancelAnimationFrame(stime);
+                   }         
+                }             
+            }
+        }
+        /***********************************弹窗部分*************************/
+        var mask=$(".mask"),
+            popup=new C3D.Stage(),
+            scene,
+            context;    
+        function createAlert(str){
+            mask.show();
+            scene= C3D.create({
+                name: 'scene',
+                type: 'sprite', 
+                position: [0, 0, -302],          
+            });
+            popup.size(vw,vh).material({color:"rgba(0,0,0,0.8)"}).update();
+            mask.append(popup.el);
+            scene.update();
+            popup.addChild(scene);
+            for(var i=0;i<10;i++){
+                var _px=rnd(70-vw/2,vw/2-70)*2,
+                    _py=rnd(70-vh/2,vh/2-70)*2,
+                    numx=Math.random(),
+                    numy=Math.random(),
+                    numz=Math.random(),
+                    rx=numx>0.5?rnd(-75,-20):rnd(20,75),
+                    ry=numy>0.5?rnd(-75,-20):rnd(20,75),
+                    rz=numz>0.5?rnd(-75,-20):rnd(20,75),
+                    rpha=Math.random();
+                    rpha=rpha>0.6?rpha:0.6;
+                    _item=C3D.create({
+                    type: 'plane',
+                    position: [0,0,-popup.fov],
+                    rotation: [0,0,0],
+                    size:[100],
+                    material: [{image: './images/angle.png', bothsides: false}],
+                    visibility:[{alpha:0.5}],
+                    scale: [0.2]
+                    });
+                    JT.kill(_item);
+                    JT.to(_item, 0.5, {
+                        x:_px,
+                        y:_py,
+                        rotationX:rx,
+                        rotationY:ry,
+                        rotationZ:rz,
+                        scaleX:2,
+                        scaleY:2,
+                        alpha:rpha,
+                        ease: JT.Quad.InOut,
+                        onUpdate: function () {
+                            this.target.update();
+                        }
+                    });         
+                scene.addChild(_item);    
+            }
+            context=C3D.create({
+                type:"sprite",
+                name:"context",
+                position:[0,0,-300],
+                children:[
+                    {
+                        type:'plane',
+                        name:'content',
+                        position:[0,0,0],
+                        size:[422,566],
+                        scale:[1],
+                        visibility:[{alpha:0}],
+                        material: [{image: './images/context'+str+'.jpg', bothsides: false}],
+                    },
+                    {
+                        type:'plane',
+                        name:'close',
+                        position:[0,155,2],
+                        size:[73,73],
+                        scale:[1],
+                        visibility:[{alpha:0}],
+                        material: [{image: './images/close.png', bothsides: false}],                   
+                    }
+                ]
+            });
+            var _text=context.children[0],
+                _close=context.children[1];
+                _text.el.className="pane";
+                _close.el.className="close";    
+            JT.kill(_text);
+            JT.to(_text, 0.5, {
+                scaleX:0.55,
+                scaleY:0.55,            
+                alpha:1,
+                delay:.3,
+                ease: JT.Quad.InOut,
+                onUpdate: function () {
+                    this.target.update();
+                }
+            });
+            JT.kill(_close);
+            JT.to(_close, 0.5, {
+                scaleX:0.55,
+                scaleY:0.55,            
+                alpha:1,
+                delay:.3,
+                ease: JT.Quad.InOut,
+                onUpdate: function () {
+                    this.target.update();
+                }
+            });                 
+            popup.addChild(context);
+            _text.className="pane";
+            cancleAlert();
+        }     
+        function destroyAlert(){
+            for(var i=0;i<10;i++){
+                var _item=scene.children[i];
+                    JT.kill(_item);
+                    JT.to(_item, 0.5, {
+                        x:0,
+                        y:0,
+                        rotationX:0,
+                        rotationY:0,
+                        rotationZ:0,
+                        scaleX:0.2,
+                        scaleY:0.2,
+                        alpha:0,
+                        ease: JT.Quad.InOut,
+                        onUpdate: function () {
+                            this.target.update();
+                        }
+                    });            
+            }
+            var _text=context.children[0],
+                _close=context.children[1];
+            JT.kill(_text);
+            JT.to(_text, 0.5, {
+                scaleX:0,
+                scaleY:0,            
+                alpha:0,
+                ease: JT.Quad.InOut,
+                onUpdate: function () {
+                    this.target.update();
+                },
+                onEnd: function(){
+                    scene.remove();
+                    context.remove();
+                    mask.hide();
+                    popup.el.remove();
+                }
+            });       
+            JT.kill(_close);
+            JT.to(_close, 0.5, {
+                scaleX:0,
+                scaleY:0,            
+                alpha:0,
+                x:0,
+                y:0,
+                ease: JT.Quad.InOut,
+                onUpdate: function () {
+                    this.target.update();
+                }
+            });         
+        }  
+        /***********************场景交互部分********/
+        function clickBtn(){
+            $(".clickBtn").on("touchstart",function(){
+                var str=$(this).parent().attr("data-name");
+                createAlert(str);
+            })
+        }
+        function cancleAlert(){
+            $(".mask").on("click",destroyAlert);
+             $(".pane").on("click",function(){
+                event.stopPropagation();
+             })
+        }
+    }
+    function loadInit(){
+        var loadStage= new C3D.Stage(),
+            vw=$(window).width(),
+            vh=$(window).height(),
+            scence,logoBg,
+            sourceArr=["./images/an1.png","./images/an2.png","./images/an3.png","./images/an4.png","./images/an5.png","./images/an6.png","./images/an7.png","./images/an8.png","./images/contexta1.jpg","./images/contexta2.jpg","./images/contexta3.jpg","./images/contexta4.jpg","./images/contexta5.jpg","./images/contexta6.jpg","./images/contexta7.jpg","./images/contexta8.jpg","./images/p1.png","./images/p2.png","./images/p3.png","./images/p4.png","./images/p5.png","./images/p6.png","./images/p7.png","./images/p8.png","./images/p9.png","./images/p10.png","./images/p11.png","./images/p12.png","./images/p13.png","./images/p14.png","./images/p15.png","./images/p16.png","./images/p17.png","./images/p18.png","./images/p19.png","./images/p20.png",];
+            loadStage.size(vw,vh).material({
+
+            }).update();        
+            $(".load").append(loadStage.el);
+            scence=C3D.create({
+                type:"plane",
+                name:"scene",
+                size:[vw,vh],
+                scale:[2],
+                visibility:[{alpha:1}],
+                position:[0,0,-loadStage.fov],
+                material:[{image: './images/bg.jpg',size:"100% 100%",position:"50% 50%", bothsides: false}],
+                children:[
+                    {
+                        type:'plane',
+                        name:'bg',
+                        position:[0,0,0],
+                        size:[vw,vh],
+                        scale:[2],
+                        visibility:[{alpha:1}],
+                        material: [{color:"rgba(0,0,0,0.5)"}],
+                    }
+                ]
+            });
+            $(".load").append(loadStage.el);
+            logoBg=C3D.create({
+                type:"sprite",
+                name:"logoBg",
+                size:[vw,vh],
+                scale:[1],
+                position:[0,0,-loadStage.fov],
+                children:[
+                    {
+                        type:'plane',
+                        name:'logo',
+                        position:[0,0,20],
+                        size:[60,60],
+                        scale:[1.5],
+                        visibility:[{alpha:1}],
+                        material: [{image:"images/logo.png",size:"100% 100%", bothsides:false}]
+                    },
+                    {
+                        type:'sprite',
+                        name:'bg',
+                        position:[0,0,0],
+                        size:[vw,vh],
+                        scale:[1],
+                        visibility:[{alpha:1}]                  
+                    }
+                ]
+            });      
+        
+            JT.to(scence, 1.5, {
+                scaleX:2.2,
+                scaleY:2.2,
+                repeat:-1,
+                yoyo:true,
+                ease: JT.Quad.InOut,
+                onUpdate: function () {
+                    this.target.update();
+                }
+            });  
+            JT.to(scence.children[0], 1.5, {
+                alpha:0,
+                repeat:-1,
+                yoyo:true,
+                ease: JT.Quad.InOut,
+                onUpdate: function () {
+                    this.target.update();
+                }
+            });       
+            JT.to(logoBg.children[0], 1.5, {
+                rotationY:360,
+                repeat:-1,
+                ease: JT.Quad.InOut,
+                onUpdate: function () {
+                    this.target.update();
+                }
+            });    
+            (function(){
+                var num=0;
+                for(var i=0,len=sourceArr.length;i<len;i++){
+                    var img=new Image();
+                    img.onload=function(){
+                        num++;
+                        if(num==len){
+                            console.log("finish");
+                        }
+                    }
+                    img.src=sourceArr[i];
+                }
+            })();
+            setTimeout(function(){
+                JT.kill(logoBg.children[0]);   
+                JT.kill(scence.children[0]);
+                JT.to(scence.children[0], 1.5, {
+                    alpha:0,
+                    ease: JT.Quad.InOut,
+                    onUpdate: function () {
+                        this.target.update();
+                    }
+                });     
+                JT.to(logoBg.children[0], 1.5, {
+                    rotationY:360,
+                    scaleX:0,
+                    scaleY:0,
+                    ease: JT.Quad.InOut,
+                    onUpdate: function () {
+                        this.target.update();
+                    },
+                    onEnd:function(){
+                        divergency();
+                        transitionBg();
+                    }                
+                });
+            },4000)     
+            //碎片发散放射
+            function divergency(){       
+                for(var i=0;i<10;i++){
+                    var _px=rnd(1200-vw/2,vw/2-1200),
+                        _py=rnd(1200-vh/2,vh/2-1200),
+                        numx=Math.random(),
+                        numy=Math.random(),
+                        numz=Math.random(),
+                        _item,
+                        rx=numx>0.5?rnd(-75,-20):rnd(20,75),
+                        ry=numy>0.5?rnd(-75,-20):rnd(20,75),
+                        rz=numz>0.5?rnd(-75,-20):rnd(20,75),
+                        rpha=Math.random();
+                        rpha=rpha>0.6?rpha:0.6;
+                        _item=C3D.create({
+                        type: 'plane',
+                        position: [0,0,0],
+                        rotation: [0,0,0],
+                        size:[100],
+                        material: [{image: './images/angle.png', bothsides: false}],
+                        visibility:[{alpha:0.5}],
+                        scale: [0.2]
+                        });
+                        JT.kill(_item);
+                        JT.to(_item, 4, {
+                            x:_px,
+                            y:_py,
+                            rotationX:rx,
+                            rotationY:ry,
+                            rotationZ:rz,
+                            scaleX:2,
+                            scaleY:2,
+                            alpha:rpha,
+                            ease: JT.Quad.InOut,
+                            onUpdate: function () {
+                                this.target.update();
+                            }
+                        });
+                                
+                    logoBg.children[1].addChild(_item);    
+                }     
+            }         
+            //
+            function transitionBg(){
+                JT.kill(scence);
+                JT.to(scence, 5, {
+                    scaleX:6,
+                    scaleY:6,
+                    alpha:0,
+                    ease: JT.Quad.InOut,
+                    onUpdate: function () {
+                        this.target.update();
+                    },
+                    onEnd: function(){
+                        loadStage.remove();  
+                        $(".load").hide().remove();      
+                        taopanoInit();       
+                    }
+                });            
+            }
+            scence.update();
+            logoBg.update();
+            loadStage.addChild(scence);
+            loadStage.addChild(logoBg);
+        }
+        //全局随机数
+        function rnd(min,max){
+            return parseInt(Math.random()*(max-min))+min;
+        }         
+	</script>
 </body>
 </html>
